@@ -11,6 +11,9 @@
     "preview": "python -m http.server -d ./out"
   },
   "dependencies": {
+    "@mantine/core": "^7.4.2",
+    "@mantine/form": "^7.4.2",
+    "@mantine/hooks": "^7.4.2",
     "debug": "^4.3.4",
     "lodash": "^4.17.21",
     "next": "14.1.0",
@@ -26,7 +29,9 @@
     "autoprefixer": "^10.0.1",
     "eslint": "^8",
     "eslint-config-next": "14.1.0",
-    "postcss": "^8",
+    "postcss": "^8.4.33",
+    "postcss-preset-mantine": "^1.12.3",
+    "postcss-simple-vars": "^7.0.1",
     "typescript": "^5"
   }
 }

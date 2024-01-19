@@ -1,6 +1,6 @@
 import React from "react";
-import '@/app/globals.css';
 import Timer from "@comp/Timer";
+// import '@/app/globals.css';
 
 
 export function Timers() {
