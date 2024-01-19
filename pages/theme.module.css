@@ -1,0 +1,10 @@
+.root {
+  &[data-variant="danger"] {
+    background-color: var(--mantine-color-red-9);
+    color: var(--mantine-color-red-0);
+  }
+
+  &[data-variant="primary"] {
+    background: var(--mantine-color-green-9);
+  }
+}

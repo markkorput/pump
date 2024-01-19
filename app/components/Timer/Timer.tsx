@@ -1,30 +1,38 @@
+import { Stack, AppShell } from '@mantine/core';
 import { formatTime } from "@lib/format";
 import { useTimerTime } from "@lib/timers";
 
 import { Controls } from "./Controls";
 import { Reps } from "./Reps";
 import { useRepsTimer } from "./useRepsTimer";
-
-
-
+import { Center, Title } from '@mantine/core';
 
 export interface TimerProps {
     running?: boolean;
 }
 
 export function Timer(props: TimerProps) {
-    const { current, ...repsTimer } = useRepsTimer({
+    const { current, ...repsTimer } = useRepsTimer({ 
         running: props.running
     });
 
     const currentTime = formatTime(useTimerTime(current || { time: 0 }))
 
-    return (<div style={{margin:"auto", width:"80%"}}>
-        <h1 style={{fontSize:"120pt", margin:"auto", width:"fit-content"}}>{currentTime}</h1> 
-        <Controls {...repsTimer} current={current} />
-        <Reps {...repsTimer} />
-       
-    </div>);
+    return (
+        <AppShell header={{ height: 200 }}>
+            <AppShell.Header withBorder={false}>
+                {/* <Stack h="100%" align="center"> */}
+                    <Center><Title>{currentTime}</Title></Center>
+                {/* </Stack> */}
+            </AppShell.Header>
+            <AppShell.Main>
+                <Center><Reps {...repsTimer} /></Center>
+            </AppShell.Main>
+            <AppShell.Footer>
+                <Controls {...repsTimer} current={current} />
+            </AppShell.Footer>
+        </AppShell>
+    );
 }
 
 export default Timer;
