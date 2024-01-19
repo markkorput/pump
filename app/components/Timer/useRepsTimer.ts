@@ -2,15 +2,19 @@ import { useState, useEffect, useCallback } from "react";
 import { getCurrentFrameTime } from "@lib/frames";
 import { type Timer, StoppedTimer, getCurrentTime, isRunning, startTimer, stopTimer, toggleTimer } from "@lib/timers";
 
+export type Rep = StoppedTimer & { name: string };
+
 export interface RepsTimer {
     running: boolean,
     current?: Timer,
-    reps: StoppedTimer[],
+    reps: Rep[],
     pause: () => void,
     resume: () => void,
     next: () => void,
     reset: () => void,
-    continue: () => void
+    continue: () => void;
+    remove: (timer: Timer) => void;
+    updateRep: (rep: Rep, timer: Partial<Rep>) => void;
 }
 
 export interface UseRepsTimerProps {
@@ -19,7 +23,7 @@ export interface UseRepsTimerProps {
 
 export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
     const [running, setRunning] = useState(props.running === true);
-    const [reps, setReps] = useState<StoppedTimer[]>([]);
+    const [reps, setReps] = useState<Rep[]>([]);
     const [current, setCurrent] = useState<Timer>();
 
     const pause = useCallback(() => setRunning(false), [setRunning]);
@@ -30,7 +34,10 @@ export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
         const rep = (current || {time: 0});
         setReps((currentReps) => [
             ...currentReps,
-            isRunning(rep) ? stopTimer(rep, t) : rep
+            {
+                ...(isRunning(rep) ? stopTimer(rep, t) : rep),
+                name: `Rep #${currentReps.length+1}`
+            }
         ]);
         const nextTimer = {time: nextStartTime};
         setCurrent(running ? startTimer(nextTimer, t) : nextTimer);
@@ -54,6 +61,12 @@ export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
                 : {time: 0})
     }, []);
 
+    const remove = useCallback((timer: Timer) => setReps((reps) => [...reps.filter((r) => r !== timer)]), []);
+
+    const updateRep = useCallback((rep: Rep, updates: Partial<Rep>) => {
+        setReps((reps) => reps.map((r) => ({ ...r, ...(rep === r ? updates : {})})));
+    }, []);
+
     useEffect(() => {
         if (current && isRunning(current) === running) return;
 
@@ -75,7 +88,9 @@ export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
         resume,
         next,
         reset,
-        continue: continu
+        continue: continu,
+        remove,
+        updateRep
     };
 }
 
