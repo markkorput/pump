@@ -15,7 +15,7 @@ export function Reps({ reps }: RepsProps) {
             </div>);
     }), [reps]);
 
-    return (<>
+    return (<div style={{width:"50vw", minWidth:200, textAlign:"right"}}>
         {lines}       
-    </>);
+    </div>);
 }

@@ -19,12 +19,12 @@ export function Timer(props: TimerProps) {
 
     const currentTime = formatTime(useTimerTime(current || { time: 0 }))
 
-    return (<>
-        <h1>{currentTime}</h1> 
+    return (<div style={{margin:"auto", width:"fit-content"}}>
+        <h1 style={{fontSize:"120pt"}}>{currentTime}</h1> 
         <Reps reps={reps} />
 
         <Controls {...repsTimer} current={current} />
-    </>);
+    </div>);
 }
 
 export default Timer;
