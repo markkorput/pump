@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "lint:fix": "next lint --fix",
     "pub": "rm -rf ./docs; cp -r ./out ./docs; touch ./docs/.nojekyll",
     "preview": "python -m http.server -d ./out"
   },

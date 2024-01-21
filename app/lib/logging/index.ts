@@ -37,32 +37,36 @@ export function setDefaultLogScope(...scopes: string[]): void {
 }
 
 export type Logger = {
-    error: (...data: unknown[]) => void,
-    warning: (...data: unknown[]) => void,
-    info: (...data: unknown[]) => void,
-    debug: (...data: unknown[]) => void,
-    debugger: dbg.Debugger,
-    sub: (scope:string) => Logger;
-}
+  error: (...data: unknown[]) => void;
+  warning: (...data: unknown[]) => void;
+  info: (...data: unknown[]) => void;
+  debug: (...data: unknown[]) => void;
+  debugger: dbg.Debugger;
+  sub: (scope: string) => Logger;
+};
 
 function toLogger(dbugger: dbg.Debugger): Logger {
-    // create scoped Debugger instances for each level
-    const debug = dbugger.extend("debug");
-    const info = dbugger.extend("info");
-    const warning = dbugger.extend("warning");
-    const error = dbugger.extend("error");
-  
-    // pipe each Debugger to the appropriate native API
-    debug.log = console.info.bind(console);
-    info.log = console.log.bind(console);
-    warning.log = console.warn.bind(console);
-    error.log = console.error.bind(console);
-  
-    return {
-      debug, info, warning, error, debugger: dbugger, sub: (scope) => toLogger(dbugger.extend(scope))
-    }
+  // create scoped Debugger instances for each level
+  const debug = dbugger.extend("debug");
+  const info = dbugger.extend("info");
+  const warning = dbugger.extend("warning");
+  const error = dbugger.extend("error");
+
+  // pipe each Debugger to the appropriate native API
+  debug.log = console.info.bind(console);
+  info.log = console.log.bind(console);
+  warning.log = console.warn.bind(console);
+  error.log = console.error.bind(console);
+
+  return {
+    debug,
+    info,
+    warning,
+    error,
+    debugger: dbugger,
+    sub: (scope) => toLogger(dbugger.extend(scope)),
+  };
 }
-  
 
 /**
  * @returns a Logger API with the given scope
