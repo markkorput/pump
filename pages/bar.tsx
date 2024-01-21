@@ -1,6 +1,6 @@
 import { ReactNode, useRef, useState } from "react";
 import { sum } from "lodash";
-import { useFrame } from "@lib/frames";
+import { useFrame } from "@/lib/frames";
 
 const barStyles = {
   display: "block",
@@ -71,9 +71,9 @@ export const Workout = () => {
 
   const startRef = useRef<number>();
 
-  useFrame((time: number) => {
-    if (!startRef.current) startRef.current = time;
-    setTime((time - startRef.current) * 0.001);
+  useFrame((frameTime: number) => {
+    if (!startRef.current) startRef.current = frameTime;
+    setTime((frameTime - startRef.current) * 0.001);
   });
 
   return <Bar durations={[7, 3, 7, 3, 7, 60, 7, 3, 7, 3, 7, 60]} time={time} />;

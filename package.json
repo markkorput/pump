@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
+    "typecheck": "tsc",
+    "validate": "yarn lint; yarn typecheck",
     "pub": "rm -rf ./docs; cp -r ./out ./docs; touch ./docs/.nojekyll",
     "preview": "python -m http.server -d ./out"
   },

@@ -74,17 +74,14 @@ export const Reps = ({ reps, remove, updateRep }: RepsProps) => {
 
   const lines = useMemo(
     () =>
-      [...reps].reverse().map((rep, idx) => {
-        const no = reps.length - idx;
-        return (
-          <Group key={`rep-${idx}`} justify="flex-end">
-            <Text onClick={() => editRep(rep)}>
-              {rep.name} - {formatTime(rep.time)}s
-            </Text>
-            <CloseButton onClick={() => removeRep(rep)} />
-          </Group>
-        );
-      }),
+      [...reps].reverse().map((rep, idx) => (
+        <Group key={`rep-${idx}`} justify="flex-end">
+          <Text onClick={() => editRep(rep)}>
+            {rep.name} - {formatTime(rep.time)}s
+          </Text>
+          <CloseButton onClick={() => removeRep(rep)} />
+        </Group>
+      )),
     [reps, editRep, removeRep],
   );
 

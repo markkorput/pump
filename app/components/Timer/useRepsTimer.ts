@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getCurrentFrameTime } from "@lib/frames";
+import { getCurrentFrameTime } from "@/lib/frames";
 import {
   type Timer,
   StoppedTimer,
@@ -29,7 +29,9 @@ export interface UseRepsTimerProps {
   running?: boolean;
 }
 
-export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
+export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
+  props: UseRepsTimerProps,
+) => {
   const [running, setRunning] = useState(props.running === true);
   const [reps, setReps] = useState<Rep[]>([]);
   const [current, setCurrent] = useState<Timer>();
@@ -74,14 +76,12 @@ export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
   }, []);
 
   const remove = useCallback(
-    (timer: Timer) => setReps((reps) => [...reps.filter((r) => r !== timer)]),
+    (timer: Timer) => setReps((rps) => [...rps.filter((r) => r !== timer)]),
     [],
   );
 
   const updateRep = useCallback((rep: Rep, updates: Partial<Rep>) => {
-    setReps((reps) =>
-      reps.map((r) => ({ ...r, ...(rep === r ? updates : {}) })),
-    );
+    setReps((rps) => rps.map((r) => ({ ...r, ...(rep === r ? updates : {}) })));
   }, []);
 
   useEffect(() => {
@@ -109,6 +109,6 @@ export function useRepsTimer(props: UseRepsTimerProps): RepsTimer {
     remove,
     updateRep,
   };
-}
+};
 
 export default useRepsTimer;

@@ -21,7 +21,7 @@
         // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md
         "import/prefer-default-export": 1,
         // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-named-as-default.md
-        "import/no-named-as-default": 1,
+        "import/no-named-as-default": 0,
         // https://eslint.org/docs/latest/rules/func-style
         "func-style": [
           1,
@@ -40,6 +40,7 @@
     {
       "files": [
         "app/**/*.{js,jsx,ts,tsx}",
+        "lib/**/*.{js,jsx,ts,tsx}",
         "pages/**/*.{js,jsx,ts,tsx}"
       ],
       "rules": {
@@ -75,7 +76,7 @@
           "error",
           {
             "forbid": [
-              "**/lib/*/*"
+              "**/lib/*/*/***"
             ]
           }
         ],

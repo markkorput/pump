@@ -20,10 +20,10 @@ const theme = createTheme({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <Component {...pageProps} />
-    </MantineProvider>
-  );
-}
+const App = ({ Component, pageProps }: AppProps) => (
+  <MantineProvider defaultColorScheme="dark" theme={theme}>
+    <Component {...pageProps} />
+  </MantineProvider>
+);
+
+export default App;

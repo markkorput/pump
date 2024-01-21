@@ -26,9 +26,9 @@
         "./*"
       ],
       "@lib/*": [
-        "./app/lib/*"
+        "./lib/*"
       ],
-      "@comp/*": [
+      "@components/*": [
         "./app/components/*"
       ]
     }

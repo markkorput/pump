@@ -1,4 +1,4 @@
-import { Stack, AppShell } from "@mantine/core";
+import { AppShell } from "@mantine/core";
 import { formatTime } from "@lib/format";
 import { useTimerTime } from "@lib/timers";
 
@@ -21,11 +21,9 @@ export const Timer = (props: TimerProps) => {
   return (
     <AppShell header={{ height: 200 }}>
       <AppShell.Header withBorder={false}>
-        {/* <Stack h="100%" align="center"> */}
         <Center>
           <Title>{currentTime}</Title>
         </Center>
-        {/* </Stack> */}
       </AppShell.Header>
       <AppShell.Main>
         <Center>

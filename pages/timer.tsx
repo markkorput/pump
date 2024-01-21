@@ -1,5 +1,4 @@
-import React from "react";
-import Timer from "@comp/Timer";
+import Timer from "@components/Timer";
 // import '@/app/globals.css';
 
 export const Timers = () => {
