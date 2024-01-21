@@ -1,3 +1,118 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "app/components/**/*.{js,jsx,ts,tsx}",
+        "pages/**/*.{js,jsx,ts,tsx}"
+      ],
+      "rules": {
+        // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/prefer-default-export.md
+        "import/prefer-default-export": 1,
+        // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-named-as-default.md
+        "import/no-named-as-default": 0,
+        // https://eslint.org/docs/latest/rules/func-style
+        "func-style": [
+          1,
+          "expression"
+        ],
+        "react/function-component-definition": [
+          1,
+          {
+            "namedComponents": "arrow-function",
+            "unnamedComponents": "arrow-function"
+          }
+        ],
+        "react-hooks/exhaustive-deps": "error"
+      }
+    },
+    {
+      "files": [
+        "app/**/*.{js,jsx,ts,tsx}",
+        "lib/**/*.{js,jsx,ts,tsx}",
+        "pages/**/*.{js,jsx,ts,tsx}"
+      ],
+      "rules": {
+        "@typescript-eslint/no-unused-vars": [
+          "error",
+          {
+            "vars": "all",
+            "args": "after-used",
+            "ignoreRestSiblings": false
+          }
+        ],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": [
+          "error",
+          {
+            "ignoreRestArgs": true
+          }
+        ],
+        // "react-refresh/only-export-components": [
+        //   "error",
+        //   {
+        //     "allowConstantExport": true
+        //   }
+        // ],
+        "react/no-unknown-property": [
+          "error",
+          // This rule doesn't get R3F, so feel free to add R3F props to this array
+          {
+            "ignore": []
+          }
+        ],
+        "import/no-internal-modules": [
+          "error",
+          {
+            "forbid": [
+              "**/lib/*/*/***"
+            ]
+          }
+        ],
+        "no-shadow": [
+          "error",
+          {
+            "allow": []
+          }
+        ]
+      }
+    }
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "prettier",
+    "react"
+    // "react-refresh",
+  ],
+  "rules": {
+    "prettier/prettier": "error"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": [
+    ".next",
+    "node_modules/",
+    "out",
+    "published"
+  ]
 }

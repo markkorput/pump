@@ -1,9 +1,9 @@
-import type { AppProps } from 'next/app';
-import { Button, MantineProvider, createTheme,  } from '@mantine/core';
-import classes from '../app/theme.module.css';
+import type { AppProps } from "next/app";
+import { Button, MantineProvider, createTheme } from "@mantine/core";
+import classes from "../app/theme.module.css";
 
 // core styles are required for all packages
-import '@mantine/core/styles.css';
+import "@mantine/core/styles.css";
 
 // other css files are required only if
 // you are using components from the corresponding package
@@ -20,10 +20,10 @@ const theme = createTheme({
   },
 });
 
-export default function App({ Component, pageProps }: AppProps) {
-  return (
-    <MantineProvider defaultColorScheme="dark" theme={theme}>
-      <Component {...pageProps} />
-    </MantineProvider>
-  );
-}
+const App = ({ Component, pageProps }: AppProps) => (
+  <MantineProvider defaultColorScheme="dark" theme={theme}>
+    <Component {...pageProps} />
+  </MantineProvider>
+);
+
+export default App;
