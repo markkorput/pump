@@ -24,7 +24,9 @@ export const Timer = (props: TimerProps) => {
       <AppShell.Main>
         <Center>
           <Stack>
-            <Text size="100pt">{currentTime}</Text>
+            <Text size="100pt" style={{ width: "50vw" }}>
+              {currentTime}
+            </Text>
             <Reps {...repsTimer} />
           </Stack>
         </Center>

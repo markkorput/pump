@@ -18,6 +18,7 @@
     "@mantine/core": "^7.4.2",
     "@mantine/form": "^7.4.2",
     "@mantine/hooks": "^7.4.2",
+    "dayjs": "^1.11.10",
     "debug": "^4.3.4",
     "lodash": "^4.17.21",
     "next": "14.1.0",
