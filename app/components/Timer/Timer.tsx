@@ -5,7 +5,7 @@ import { useTimerTime } from "@lib/timers";
 import { Controls } from "./Controls";
 import { Reps } from "./Reps";
 import { useRepsTimer } from "./useRepsTimer";
-import { Center, Title } from "@mantine/core";
+import { Center, Text } from "@mantine/core";
 
 export interface TimerProps {
   running?: boolean;
@@ -20,17 +20,16 @@ export const Timer = (props: TimerProps) => {
 
   return (
     <AppShell header={{ height: 200 }}>
-      <AppShell.Header withBorder={false}>
-        <Center>
-          <Title>{currentTime}</Title>
-        </Center>
-      </AppShell.Header>
+      {/* <AppShell.Header withBorder={false}></AppShell.Header> */}
       <AppShell.Main>
+        <Center>
+          <Text size="100pt">{currentTime}</Text>
+        </Center>
         <Center>
           <Reps {...repsTimer} />
         </Center>
       </AppShell.Main>
-      <AppShell.Footer>
+      <AppShell.Footer withBorder={false}>
         <Controls {...repsTimer} current={current} />
       </AppShell.Footer>
     </AppShell>
