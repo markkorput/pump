@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from "react";
-import { getCurrentFrameTime } from "@/lib/frames";
 import {
   type Timer,
   StoppedTimer,
@@ -8,6 +7,7 @@ import {
   startTimer,
   stopTimer,
   toggleTimer,
+  getSystemTime,
 } from "@lib/timers";
 
 export type Rep = StoppedTimer & { name: string };
@@ -42,7 +42,7 @@ export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
 
   const shift = useCallback(
     async (nextStartTime: number) => {
-      const t = await getCurrentFrameTime();
+      const t = getSystemTime();
       const rep = current || { time: 0 };
       setReps((currentReps) => [
         ...currentReps,
@@ -63,17 +63,15 @@ export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
     shift(
       current
         ? isRunning(current)
-          ? await getCurrentTime(current, await getCurrentFrameTime())
+          ? await getCurrentTime(current)
           : current.time
         : 0,
     );
   }, [shift, current]);
 
   const reset = useCallback(async () => {
-    console.log("reset");
-    const t = await getCurrentFrameTime();
     setCurrent((cur) =>
-      cur && isRunning(cur) ? startTimer({ time: 0 }, t) : { time: 0 },
+      cur && isRunning(cur) ? startTimer({ time: 0 }) : { time: 0 },
     );
   }, []);
 
@@ -95,14 +93,13 @@ export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
   useEffect(() => {
     if (current && isRunning(current) === running) return;
 
-    getCurrentFrameTime().then((t) => {
-      if (current) {
-        setCurrent(toggleTimer(current, t));
-        return;
-      }
+    const t = getSystemTime();
+    if (current) {
+      setCurrent(toggleTimer(current, t));
+      return;
+    }
 
-      setCurrent(running ? { systemStartTime: t } : { time: 0 });
-    });
+    setCurrent(running ? { systemStartTime: t } : { time: 0 });
   }, [running, current]);
 
   return {

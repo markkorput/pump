@@ -1,5 +1,7 @@
 import type { Timer, StoppedTimer, RunningTimer } from "./types";
 
+export const getSystemTime = () => performance.now();
+
 export function isRunning(timer: Timer): timer is RunningTimer {
   return "systemStartTime" in timer;
 }
@@ -10,18 +12,22 @@ export function isStopped(timer: Timer): timer is StoppedTimer {
 
 export function getCurrentTime(
   timer: RunningTimer,
-  systemTime: number,
+  systemTime?: number,
 ): number {
-  return systemTime - timer.systemStartTime + (timer.timerStartTime || 0);
+  return (
+    (systemTime || getSystemTime()) -
+    timer.systemStartTime +
+    (timer.timerStartTime || 0)
+  );
 }
 
-export function getTime(timer: Timer, systemTime: number): number {
+export function getTime(timer: Timer, systemTime?: number): number {
   return isRunning(timer) ? getCurrentTime(timer, systemTime) : timer.time;
 }
 
 export function stopTimer(
   timer: RunningTimer,
-  systemTime: number,
+  systemTime?: number,
 ): StoppedTimer {
   return {
     time: getCurrentTime(timer, systemTime),
@@ -30,15 +36,15 @@ export function stopTimer(
 
 export function startTimer(
   timer: StoppedTimer,
-  systemTime: number,
+  systemTime?: number,
 ): RunningTimer {
   return {
-    systemStartTime: systemTime,
+    systemStartTime: systemTime || getSystemTime(),
     timerStartTime: timer.time,
   };
 }
 
-export function toggleTimer(timer: Timer, systemTime: number): Timer {
+export function toggleTimer(timer: Timer, systemTime?: number): Timer {
   return isRunning(timer)
     ? stopTimer(timer, systemTime)
     : startTimer(timer, systemTime);

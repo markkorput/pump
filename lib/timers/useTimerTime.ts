@@ -1,7 +1,5 @@
-import { type Timer, isRunning, getCurrentTime } from ".";
-import { useTime } from "../frames";
+import { type Timer, isRunning, getCurrentTime, getSystemTime } from ".";
 
 export function useTimerTime(timer: Timer) {
-  const t = useTime();
-  return isRunning(timer) ? getCurrentTime(timer, t) : timer.time;
+  return isRunning(timer) ? getCurrentTime(timer) : timer.time;
 }
