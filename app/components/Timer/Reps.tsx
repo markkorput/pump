@@ -12,6 +12,7 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 
 import { useCallback, useMemo, useState } from "react";
+import { sumBy } from "lodash";
 import { formatTime } from "@lib/format";
 import { RepsTimer, type Rep } from "./useRepsTimer";
 
@@ -85,9 +86,13 @@ export const Reps = ({ reps, remove, updateRep }: RepsProps) => {
     [reps, editRep, removeRep],
   );
 
+  const total = useMemo(() => formatTime(sumBy(reps, "time")), [reps]);
   return (
     <>
-      <Stack>{lines}</Stack>
+      <Stack justify="flex-end">
+        {lines}
+        <Group justify="flex-end">Total: {total}</Group>
+      </Stack>
 
       <Modal opened={opened} onClose={close} title="Edit Rep">
         <RepForm

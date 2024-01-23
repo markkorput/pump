@@ -2,7 +2,7 @@ import { Button, Grid } from "@mantine/core";
 import { RepsTimer } from "./useRepsTimer";
 import { isRunning } from "@lib/timers";
 
-const buttonSize = { height: "20vh", maxHeight: 250 };
+const buttonSize = { height: "20vh", maxHeight: 150 };
 const buttonProps = { fullWidth: true, size: "xl", style: buttonSize };
 
 export type ControlsProps = Pick<
