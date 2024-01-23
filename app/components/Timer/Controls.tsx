@@ -2,6 +2,9 @@ import { Button, Grid } from "@mantine/core";
 import { RepsTimer } from "./useRepsTimer";
 import { isRunning } from "@lib/timers";
 
+const buttonSize = { height: "20vh", maxHeight: 250 };
+const buttonProps = { fullWidth: true, size: "xl", style: buttonSize };
+
 export type ControlsProps = Pick<
   RepsTimer,
   "current" | "running" | "pause" | "resume" | "next" | "continue" | "reset"
@@ -21,9 +24,8 @@ export const Controls = ({
     <Grid gutter="xs" grow>
       <Grid.Col span={4}>
         <Button
-          fullWidth
+          {...buttonProps}
           variant={resetable ? "danger" : undefined}
-          size="xl"
           onClick={reset}
           disabled={!resetable}
         >
@@ -31,25 +33,25 @@ export const Controls = ({
         </Button>
       </Grid.Col>
       <Grid.Col span={4}>
-        <Button fullWidth size="xl" onClick={continu}>
+        <Button {...buttonProps} color="gray" onClick={continu}>
           Continue
         </Button>
       </Grid.Col>
       <Grid.Col span={4}>
-        <Button fullWidth size="xl" onClick={next}>
+        <Button {...buttonProps} color="gray" onClick={next}>
           Next Rep
         </Button>
       </Grid.Col>
       {running && (
         <Grid.Col span={12}>
-          <Button fullWidth size="xl" onClick={pause}>
+          <Button {...buttonProps} onClick={pause}>
             Pause
           </Button>
         </Grid.Col>
       )}
       {!running && (
         <Grid.Col span={12}>
-          <Button fullWidth size="xl" onClick={resume}>
+          <Button {...buttonProps} onClick={resume}>
             Go
           </Button>
         </Grid.Col>
