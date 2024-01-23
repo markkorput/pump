@@ -7,7 +7,14 @@ const buttonProps = { fullWidth: true, size: "xl", style: buttonSize };
 
 export type ControlsProps = Pick<
   RepsTimer,
-  "current" | "running" | "pause" | "resume" | "next" | "continue" | "reset"
+  | "current"
+  | "running"
+  | "pause"
+  | "resume"
+  | "next"
+  | "continue"
+  | "reset"
+  | "clear"
 >;
 
 export const Controls = ({
@@ -17,20 +24,35 @@ export const Controls = ({
   resume,
   next,
   reset,
+  clear,
   continue: continu,
 }: ControlsProps) => {
   const resetable = !!current && (isRunning(current) || current.time > 0);
+  const clearable = !resetable;
+
   return (
     <Grid gutter="xs" grow>
       <Grid.Col span={4}>
-        <Button
-          {...buttonProps}
-          variant={resetable ? "danger" : undefined}
-          onClick={reset}
-          disabled={!resetable}
-        >
-          Reset
-        </Button>
+        {clearable && (
+          <Button
+            {...buttonProps}
+            variant={clearable ? "danger" : undefined}
+            onClick={clear}
+            disabled={!clearable}
+          >
+            Clear
+          </Button>
+        )}
+        {resetable && (
+          <Button
+            {...buttonProps}
+            variant={resetable ? "danger" : undefined}
+            onClick={reset}
+            disabled={!resetable}
+          >
+            Reset
+          </Button>
+        )}
       </Grid.Col>
       <Grid.Col span={4}>
         <Button {...buttonProps} color="gray" onClick={continu}>

@@ -25,7 +25,6 @@ export const Timer = (props: TimerProps) => {
         <Center>
           <Stack>
             <Text size="100pt">{currentTime}</Text>
-
             <Reps {...repsTimer} />
           </Stack>
         </Center>
