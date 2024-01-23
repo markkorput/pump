@@ -20,6 +20,7 @@ export interface RepsTimer {
   resume: () => void;
   next: () => void;
   reset: () => void;
+  clear: () => void;
   continue: () => void;
   remove: (timer: Timer) => void;
   updateRep: (rep: Rep, timer: Partial<Rep>) => void;
@@ -69,10 +70,17 @@ export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
   }, [shift, current]);
 
   const reset = useCallback(async () => {
+    console.log("reset");
     const t = await getCurrentFrameTime();
     setCurrent((cur) =>
       cur && isRunning(cur) ? startTimer({ time: 0 }, t) : { time: 0 },
     );
+  }, []);
+
+  const clear = useCallback(() => {
+    setReps([]);
+    setCurrent({ time: 0 });
+    setRunning(false);
   }, []);
 
   const remove = useCallback(
@@ -105,6 +113,7 @@ export const useRepsTimer: (props: UseRepsTimerProps) => RepsTimer = (
     resume,
     next,
     reset,
+    clear,
     continue: continu,
     remove,
     updateRep,
