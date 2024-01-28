@@ -20,11 +20,11 @@ export function useQuery<T>(action: () => Promise<T>): QueryResult<T> {
     });
   }, [ref]);
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    console.log("query memo");
+    return {
       status: result ? "success" : "loading",
       data: result,
-    }),
-    [result],
-  );
+    };
+  }, [result]);
 }

@@ -6,70 +6,70 @@ import {
   useUpdateInterval,
   useDeleteInterval,
 } from "@hooks/intervals";
-import { IntervalDefinition, IntervalValues } from "./types";
+import { IntervalDefinition } from "./types";
 import IntervalBar from "./IntervalBar";
-import IntervalInputs from "./IntervalInputs";
+import IntervalForm, { IntervalFormValues } from "./IntervalForm";
 import IntervalSelector from "./IntervalSelector";
 import { createLogger } from "@lib/logging";
 
 const log = createLogger("interval-editor");
 
-const defaultValues: IntervalValues = {
-  reps: { amount: 3, duration: 3.0, rest: 10.0 },
-  sets: { amount: 1, rest: 30.0 },
-};
-
 export const IntervalEditor = () => {
   const { data: intervals } = useIntervals();
-  const { mutate: create } = useCreateInterval();
+  // const { mutate: create } = useCreateInterval();
   const { mutate: update } = useUpdateInterval();
   const { mutate: deleteInterval } = useDeleteInterval();
 
-  const [interval, setInterval] = useState<
-    IntervalValues & { name?: string; id?: string }
-  >(defaultValues);
+  const [interval, setInterval] = useState<IntervalDefinition | undefined>();
+  const [editInterval, setEditInterval] = useState<
+    IntervalDefinition | undefined
+  >();
 
-  const save = useCallback(() => {
-    const { name, id, ...values } = interval;
-
-    if (!name) return;
-
-    if (id) {
-      update({ id, name, ...values }).then((res) =>
-        log.debug("Interval updated", res),
-      );
-      return;
-    }
-
-    create({ name, ...values }).then((res) =>
-      log.debug("Interval created", res),
-    );
-  }, [interval, create, update]);
-
-  const onValuesChanged = useCallback(
-    (values: IntervalValues) => {
-      setInterval((current) => ({ ...current, ...values }));
+  const submitEditForm = useCallback(
+    (vals: IntervalFormValues) => {
+      if (!editInterval) return;
+      update({ ...vals, id: editInterval.id }).then((res) => {
+        log.debug("Interval updated", res);
+        // setEditInterval(undefined);
+      });
     },
-    [setInterval],
+    [update, editInterval],
   );
+
+  // const save = useCallback(() => {
+  //   if (!name) return;
+
+  //   if (selected?.id) {
+  //     update({ id: selected.id, name: name, ...values }).then((res) =>
+  //       log.debug("Interval updated", res),
+  //     );
+  //     return;
+  //   }
+
+  //   create({ name: name, ...values }).then((res) =>
+  //     log.debug("Interval created", res),
+  //   );
+  // }, [create, update, selected, name, values]);
 
   return (
     <Stack>
       <IntervalSelector
         intervals={intervals || []}
-        onSelect={setInterval}
+        onSelect={(selected) => {
+          setEditInterval(undefined);
+          setInterval(selected);
+        }}
+        onEdit={(int) => {
+          setEditInterval(int);
+        }}
         onDelete={({ id }: IntervalDefinition) => deleteInterval(id)}
       />
-      <IntervalInputs values={interval} onChange={onValuesChanged} />
-      <TextInput
-        label="Interval Name"
-        defaultValue={interval?.name}
-        onChange={(e) => setInterval({ ...interval, name: e.target.value })}
-      />
-      <Button onClick={save} disabled={!interval.name}>
-        Save Interval
-      </Button>
-      {interval && <IntervalBar interval={interval} width={1000} height={20} />}
+      {editInterval && (
+        <IntervalForm interval={editInterval} onSubmit={submitEditForm} />
+      )}
+      {interval && !editInterval && (
+        <IntervalBar interval={interval} width={1000} height={20} />
+      )}
     </Stack>
   );
 };

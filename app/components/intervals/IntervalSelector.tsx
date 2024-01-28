@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   CloseButton,
+  Button,
   useCombobox,
   Combobox,
   Group,
@@ -11,12 +12,14 @@ import { IntervalDefinition } from "./types";
 interface IntervalSelectorProps {
   intervals: IntervalDefinition[];
   onSelect?: (interval: IntervalDefinition) => void;
+  onEdit?: (interval: IntervalDefinition) => void;
   onDelete?: (interval: IntervalDefinition) => void;
 }
 
 const IntervalSelector = ({
   intervals,
   onSelect,
+  onEdit,
   onDelete,
 }: IntervalSelectorProps) => {
   const combobox = useCombobox({
@@ -44,24 +47,43 @@ const IntervalSelector = ({
       >
         <Group justify="space-between">
           {interval.name}
-          <CloseButton
-            size="xs"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if (
-                confirm(
-                  `Are you sure you want to delete the interval "${interval.name}"`,
-                )
-              ) {
-                onDelete?.(interval);
-              }
-            }}
-          />
+          <Group gap="xs">
+            {onEdit && (
+              <Button
+                size="xs"
+                variant="transparent"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  combobox.closeDropdown();
+                  onEdit(interval);
+                }}
+              >
+                edit
+              </Button>
+            )}
+            {onDelete && (
+              <CloseButton
+                size="xs"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  combobox.closeDropdown();
+                  if (
+                    confirm(
+                      `Are you sure you want to delete the interval "${interval.name}"`,
+                    )
+                  ) {
+                    onDelete(interval);
+                  }
+                }}
+              />
+            )}
+          </Group>
         </Group>
       </Combobox.Option>
     ));
-  }, [intervals, search, onDelete]);
+  }, [intervals, search, combobox, onEdit, onDelete]);
 
   useEffect(() => {
     if (value && onSelect) {

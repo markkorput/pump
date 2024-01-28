@@ -28,6 +28,7 @@
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@tabler/icons-react": "^2.46.0",
     "@testing-library/react": "^14.1.2",
     "@types/debug": "^4.1.12",
     "@types/lodash": "^4.14.202",
