@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { sumBy } from "lodash";
-import { IntervalDefinition } from "./types";
+import { IntervalValues } from "./types";
 import { totalDuration, toSections } from "./helpers";
 
 const barStyles = {
@@ -18,7 +18,7 @@ const colors = {
 };
 
 interface IntervalBarProps {
-  interval: IntervalDefinition;
+  interval: IntervalValues;
   progress?: number;
   time?: number;
   width?: number;

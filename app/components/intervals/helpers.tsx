@@ -1,6 +1,6 @@
-import type { IntervalDefinition, IntervalSection, SectionType } from "./types";
+import type { IntervalValues, IntervalSection, SectionType } from "./types";
 
-export function totalDuration(interval: IntervalDefinition): number {
+export function totalDuration(interval: IntervalValues): number {
   return (
     (interval.reps.amount * interval.reps.duration +
       (interval.reps.amount - 1) * interval.reps.rest) *
@@ -9,7 +9,7 @@ export function totalDuration(interval: IntervalDefinition): number {
   );
 }
 
-export function toSections(interval: IntervalDefinition): IntervalSection[] {
+export function toSections(interval: IntervalValues): IntervalSection[] {
   // sets
   return Array.from({ length: interval.sets.amount }).flatMap((_, setIdx) => [
     // unless this is the first set...

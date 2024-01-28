@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useCombobox, Combobox, InputBase } from "@mantine/core";
-import { SavedIntervalDefinition } from "./types";
+import { IntervalDefinition } from "./types";
 
 interface IntervalSelectorProps {
-  intervals: SavedIntervalDefinition[];
-  onSelect?: (interval: SavedIntervalDefinition) => void;
+  intervals: IntervalDefinition[];
+  onSelect?: (interval: IntervalDefinition) => void;
 }
 
 const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {

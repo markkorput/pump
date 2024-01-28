@@ -1,4 +1,7 @@
 import { ResourceApi } from "./resource";
+import { log as apiLog } from "./api";
+
+const log = apiLog.sub("intervals");
 
 export type IntervalRepsDef = {
   amount: number;
@@ -12,30 +15,28 @@ export type IntervalSetsDef = {
 };
 
 export type IntervalDefinition = {
+  id: string;
+  name: string;
   reps: IntervalRepsDef;
   sets: IntervalSetsDef;
 };
 
-export type NamedIntervalDefinition = IntervalDefinition & {
-  name: string;
-};
-
-export type SavedIntervalDefinition = NamedIntervalDefinition & {
-  id: string;
-};
+export type CreateIntervalProps = Omit<IntervalDefinition, "id">;
 
 export class IntervalsAPI extends ResourceApi {
   public readonly resourceName = "intervals";
 
-  public async index(): Promise<SavedIntervalDefinition[]> {
-    const result = this.resource.index();
+  public async index(): Promise<IntervalDefinition[]> {
+    const result = await this.resource.index();
     // parse
-    return result.data;
+    return result.data as IntervalDefinition[]; // TODO
     // .col(this.collectionName);
     // return this.parseCollection(result.data);
   }
 
-  // public async create(
-  //   interval: NamedIntervalDefinition,
-  // ): Promise<SavedIntervalDefinition> {}
+  public async create(props: CreateIntervalProps): Promise<IntervalDefinition> {
+    log.debug("create: ", props);
+    const result = await this.resource.create(props);
+    return result.data as IntervalDefinition; // TODO
+  }
 }

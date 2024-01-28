@@ -1,30 +1,44 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Stack, TextInput, Button } from "@mantine/core";
-import { IntervalDefinition } from "./types";
+import { useIntervals, useCreateInterval } from "@hooks/intervals";
+import { IntervalValues } from "./types";
 import IntervalBar from "./IntervalBar";
 import IntervalInputs from "./IntervalInputs";
 import IntervalSelector from "./IntervalSelector";
+import { createLogger } from "@lib/logging";
 
-const defaultValues = {
+const log = createLogger("interval-editor");
+
+const defaultValues: IntervalValues = {
   reps: { amount: 3, duration: 3.0, rest: 10.0 },
   sets: { amount: 1, rest: 30.0 },
 };
 
 export const IntervalEditor = () => {
+  // const { data: intervals } = useIntervals();
+  const { mutate: create } = useCreateInterval();
+
   const [interval, setInterval] = useState<
-    IntervalDefinition & { name?: string; id?: string }
+    IntervalValues & { name?: string; id?: string }
   >(defaultValues);
 
   // const doSave = (interval: IntervalDefinition & { name: string }) => {};
 
-  const save = () => {
+  const save = useCallback(() => {
     // if (interval) doSave({ ...interval, name });
-  };
+    const { name, ...values } = interval;
+
+    if (name) {
+      create({ name, ...values }).then((res) =>
+        log.debug("Interval saved", res),
+      );
+    }
+  }, [interval, create]);
 
   return (
     <Stack>
-      <IntervalSelector intervals={[]} onSelect={setInterval} />
-      <IntervalInputs interval={interval} onChange={setInterval} />
+      {/* <IntervalSelector intervals={intervals || []} onSelect={setInterval} /> */}
+      <IntervalInputs values={interval} onChange={setInterval} />
       <TextInput
         label="Interval Name"
         defaultValue={interval?.name}

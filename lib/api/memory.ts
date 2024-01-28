@@ -1,9 +1,12 @@
 import { ApiSession, ApiResourceSession, PrimaryKey } from "./session";
 import { max, cloneDeep } from "lodash";
+import { log as apiLog } from "./api";
+
+const log = apiLog.sub("memory");
 
 type Db = Record<string, unknown>;
 
-export class MemorySessionApi implements ApiSession {
+export class MemoryApiSession implements ApiSession {
   private db: Db | undefined = undefined;
 
   constructor(
@@ -21,9 +24,11 @@ export class MemorySessionApi implements ApiSession {
 
   public async load(): Promise<void> {
     this.db = this.opts.load ? cloneDeep(await this.opts.load()) : {};
+    log.debug("load", this.db);
   }
 
   public async save(): Promise<void> {
+    log.debug("save", this.db);
     if (this.db) this.opts.save?.(this.db);
   }
 }
@@ -77,6 +82,7 @@ export class MemoryResourceApi implements ApiResourceSession {
       ...("id" in args ? {} : { id: await this.getNextId() }),
     };
 
+    log.debug("create", item);
     this.data.push(item);
     this.options.afterWrite?.();
 

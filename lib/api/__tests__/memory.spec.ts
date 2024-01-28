@@ -1,5 +1,5 @@
 import { describe, expect, test, vi, beforeEach } from "vitest";
-import { MemorySessionApi } from "../memory";
+import { MemoryApiSession } from "../memory";
 
 function getMocks(initialData: Record<string, unknown[]> = {}) {
   const saveSpy = vi.fn();
@@ -7,7 +7,7 @@ function getMocks(initialData: Record<string, unknown[]> = {}) {
     .fn()
     .mockImplementation(() => Promise.resolve(initialData));
 
-  const session = new MemorySessionApi({
+  const session = new MemoryApiSession({
     save: saveSpy,
     load: loadSpy,
   });

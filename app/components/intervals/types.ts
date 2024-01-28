@@ -1,26 +1,11 @@
-export type IntervalRepsDef = {
-  amount: number;
-  duration: number;
-  rest: number;
-};
+import { type CreateIntervalProps } from "@lib/api/intervals";
 
-export type IntervalSetsDef = {
-  amount: number;
-  rest: number;
-};
+export type {
+  IntervalDefinition,
+  CreateIntervalProps,
+} from "@lib/api/intervals";
 
-export type IntervalDefinition = {
-  reps: IntervalRepsDef;
-  sets: IntervalSetsDef;
-};
-
-export type NamedIntervalDefinition = IntervalDefinition & {
-  name: string;
-};
-
-export type SavedIntervalDefinition = NamedIntervalDefinition & {
-  id: string;
-};
+export type IntervalValues = Omit<CreateIntervalProps, "name">;
 
 export type SectionType = "rep" | "rest";
 
