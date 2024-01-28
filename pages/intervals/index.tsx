@@ -12,6 +12,11 @@ export const Intervals = () => {
       {intervals && (
         <IntervalList
           intervals={intervals}
+          onSelect={(interval) =>
+            Router.push(
+              `./intervals/show?id=${interval.id}&backUrl=${"/interval"}`,
+            )
+          }
           onEdit={(interval) =>
             Router.push(
               `./intervals/edit?id=${interval.id}&backUrl=${"/interval"}`,

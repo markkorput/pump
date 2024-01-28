@@ -5,7 +5,7 @@ export const Index = () => {
     <>
       <Link href="/timer">Timer</Link>
       <br />
-      <Link href="/bar">Bar</Link>
+      <Link href="/intervals">Intervals</Link>
     </>
   );
 };
