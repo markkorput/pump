@@ -22,11 +22,6 @@
         "import/prefer-default-export": 1,
         // https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/no-named-as-default.md
         "import/no-named-as-default": 0,
-        // https://eslint.org/docs/latest/rules/func-style
-        "func-style": [
-          1,
-          "expression"
-        ],
         "react/function-component-definition": [
           1,
           {

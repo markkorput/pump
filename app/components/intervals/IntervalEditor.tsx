@@ -1,81 +1,37 @@
-import { useEffect, useState } from "react";
-import { NumberInput, Group, Stack } from "@mantine/core";
+import { useState } from "react";
+import { Stack, TextInput, Button } from "@mantine/core";
 import { IntervalDefinition } from "./types";
 import IntervalBar from "./IntervalBar";
+import IntervalInputs from "./IntervalInputs";
+import IntervalSelector from "./IntervalSelector";
 
-export interface IntervalInputsProps {
-  onChange?: (intervalDef: IntervalDefinition) => void;
-}
-
-export const IntervalInputs = ({ onChange }: IntervalInputsProps) => {
-  const [reps, setReps] = useState<number>();
-  const [repsDur, setRepsDur] = useState<number>();
-  const [repsRest, setRepsRest] = useState<number>();
-  const [sets, setSets] = useState<number>();
-  const [setsRest, setSetsRest] = useState<number>();
-
-  useEffect(() => {
-    onChange?.({
-      reps: {
-        amount: reps || 1,
-        duration: repsDur || 1,
-        rest: repsRest || 10,
-      },
-      sets: {
-        amount: sets || 1,
-        rest: setsRest || 30,
-      },
-    });
-  }, [onChange, reps, repsDur, repsRest, sets, setsRest]);
-
-  return (
-    <Group>
-      <NumberInput
-        min={0}
-        style={{ width: 100 }}
-        placeholder="Amount of reps"
-        onChange={(v) => setReps(typeof v === "number" ? v : parseInt(v))}
-        label="Reps"
-      />
-      <NumberInput
-        min={0}
-        style={{ width: 100 }}
-        placeholder="Duration of a rep in seconds"
-        onChange={(v) => setRepsDur(typeof v === "number" ? v : parseInt(v))}
-        label="Reps Dur"
-      />
-      <NumberInput
-        min={0}
-        style={{ width: 100 }}
-        placeholder="Rest in seconds"
-        onChange={(v) => setRepsRest(typeof v === "number" ? v : parseInt(v))}
-        label="Reps Rest"
-      />
-      <NumberInput
-        min={0}
-        style={{ width: 100 }}
-        placeholder="Number of sets"
-        onChange={(v) => setSets(typeof v === "number" ? v : parseInt(v))}
-        label="Sets"
-      />
-      <NumberInput
-        min={0}
-        style={{ width: 100 }}
-        placeholder="Rest between sets"
-        onChange={(v) => setSetsRest(typeof v === "number" ? v : parseInt(v))}
-        label="Set Rest"
-      />
-    </Group>
-  );
+const defaultValues = {
+  reps: { amount: 3, duration: 3.0, rest: 10.0 },
+  sets: { amount: 1, rest: 30.0 },
 };
 
 export const IntervalEditor = () => {
-  const [def, setDef] = useState<IntervalDefinition>();
+  const [interval, setInterval] = useState<
+    IntervalDefinition & { name?: string; id?: string }
+  >(defaultValues);
+
+  // const doSave = (interval: IntervalDefinition & { name: string }) => {};
+
+  const save = () => {
+    // if (interval) doSave({ ...interval, name });
+  };
 
   return (
     <Stack>
-      <IntervalInputs onChange={setDef} />
-      {def && <IntervalBar interval={def} width={1000} height={20} />}
+      <IntervalSelector intervals={[]} onSelect={setInterval} />
+      <IntervalInputs interval={interval} onChange={setInterval} />
+      <TextInput
+        label="Interval Name"
+        defaultValue={interval?.name}
+        onChange={(e) => setInterval({ ...interval, name: e.target.value })}
+      />
+      <Button onClick={save}>Save Interval</Button>
+      {interval && <IntervalBar interval={interval} width={1000} height={20} />}
     </Stack>
   );
 };

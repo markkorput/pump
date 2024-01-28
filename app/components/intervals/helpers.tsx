@@ -1,19 +1,33 @@
-import { IntervalDefinition } from "./types";
+import type { IntervalDefinition, IntervalSection, SectionType } from "./types";
 
-export const totalDuration = (interval: IntervalDefinition) =>
-  (interval.reps.amount * interval.reps.duration +
-    (interval.reps.amount - 1) * interval.reps.rest) *
-    interval.sets.amount +
-  (interval.sets.amount - 1) * interval.sets.rest;
+export function totalDuration(interval: IntervalDefinition): number {
+  return (
+    (interval.reps.amount * interval.reps.duration +
+      (interval.reps.amount - 1) * interval.reps.rest) *
+      interval.sets.amount +
+    (interval.sets.amount - 1) * interval.sets.rest
+  );
+}
 
-export const toSections = (interval: IntervalDefinition) => {
+export function toSections(interval: IntervalDefinition): IntervalSection[] {
+  // sets
   return Array.from({ length: interval.sets.amount }).flatMap((_, setIdx) => [
-    ...(setIdx === 0 ? [] : [{ duration: interval.sets.rest, type: "rest" }]),
+    // unless this is the first set...
+    ...(setIdx === 0
+      ? []
+      : // ...insert a rest
+        [{ duration: interval.sets.rest, type: "rest" as SectionType }]),
+    // map reps
     ...Array.from({ length: interval.reps.amount }).flatMap((__, idx) => [
-      ...(idx === 0 ? [] : [{ duration: interval.reps.rest, type: "rest" }]),
-      { duration: interval.reps.duration, type: "rep" },
+      // unless this is the first rep...
+      ...(idx === 0
+        ? []
+        : // insert a rest
+          [{ duration: interval.reps.rest, type: "rest" as SectionType }]),
+      // rep
+      { duration: interval.reps.duration, type: "rep" as SectionType },
     ]),
   ]);
-};
+}
 
 export default totalDuration;
