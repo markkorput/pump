@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { NumberInput, Group, Stack, TextInput, Button } from "@mantine/core";
 import { merge, cloneDeep } from "lodash";
 import { IntervalDefinition } from "./types";
-import IntervalBar from "./IntervalBar";
+import SectionsBar from "./SectionsBar";
+import useIntervalSections from "./useIntervalSections";
 
 export type IntervalFormValues = Omit<IntervalDefinition, "id">;
 
@@ -36,6 +37,10 @@ export const IntervalForm = ({
       interval,
     ),
   );
+
+  const { sections } = useIntervalSections({
+    interval: current,
+  });
 
   // trigger onChange option when current changes
   useEffect(() => {
@@ -104,7 +109,7 @@ export const IntervalForm = ({
         />
       </Group>
 
-      {bar && <IntervalBar interval={current} width={1000} height={20} />}
+      {bar && <SectionsBar sections={sections} />}
 
       <Button
         onClick={() => onSubmit?.(current)}

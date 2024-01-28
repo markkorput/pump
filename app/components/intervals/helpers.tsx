@@ -9,7 +9,22 @@ export function totalDuration(interval: IntervalValues): number {
   );
 }
 
+export function toSetSections(interval: IntervalValues): IntervalSection[] {
+  // map reps
+  return Array.from({ length: interval.reps.amount }).flatMap((__, idx) => [
+    // unless this is the first rep...
+    ...(idx === 0
+      ? []
+      : // insert a rest
+        [{ duration: interval.reps.rest, type: "rest" as SectionType }]),
+    // rep
+    { duration: interval.reps.duration, type: "rep" as SectionType },
+  ]);
+}
+
 export function toSections(interval: IntervalValues): IntervalSection[] {
+  const setSections = toSetSections(interval);
+
   // sets
   return Array.from({ length: interval.sets.amount }).flatMap((_, setIdx) => [
     // unless this is the first set...
@@ -17,16 +32,7 @@ export function toSections(interval: IntervalValues): IntervalSection[] {
       ? []
       : // ...insert a rest
         [{ duration: interval.sets.rest, type: "rest" as SectionType }]),
-    // map reps
-    ...Array.from({ length: interval.reps.amount }).flatMap((__, idx) => [
-      // unless this is the first rep...
-      ...(idx === 0
-        ? []
-        : // insert a rest
-          [{ duration: interval.reps.rest, type: "rest" as SectionType }]),
-      // rep
-      { duration: interval.reps.duration, type: "rep" as SectionType },
-    ]),
+    ...setSections,
   ]);
 }
 

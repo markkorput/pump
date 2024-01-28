@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { sumBy } from "lodash";
-import { IntervalValues } from "./types";
-import { totalDuration, toSections } from "./helpers";
+import { IntervalSection } from "./types";
 
 const barStyles = {
   display: "block",
@@ -17,29 +16,21 @@ const colors = {
   progress: "#00000055",
 };
 
-interface IntervalBarProps {
-  interval: IntervalValues;
+interface SectionsBarProps {
+  sections: IntervalSection[];
   progress?: number;
-  time?: number;
   width?: number;
   height?: number;
 }
 
-const IntervalBar = ({
-  interval,
-  time,
+const SectionsBar = ({
+  sections,
   progress,
   width = 100,
   height = 3,
-}: IntervalBarProps) => {
-  const ttl = totalDuration(interval);
-
-  if (time && !progress) {
-    progress = time / ttl;
-  }
-
+}: SectionsBarProps) => {
   const barSections = useMemo(() => {
-    const sections = toSections(interval);
+    const ttl = sumBy(sections, "duration");
 
     return sections.map((section, idx) => (
       <rect
@@ -51,7 +42,7 @@ const IntervalBar = ({
         fill={idx % 2 ? colors.active : colors.rest}
       />
     ));
-  }, [interval, ttl, width, height]);
+  }, [sections, width, height]);
 
   return (
     <svg
@@ -73,4 +64,4 @@ const IntervalBar = ({
   );
 };
 
-export default IntervalBar;
+export default SectionsBar;
