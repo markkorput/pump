@@ -9,6 +9,14 @@ type Db = Record<string, unknown>;
 export class MemoryApiSession implements ApiSession {
   private db: Db | undefined = undefined;
 
+  private get loadedDb(): Promise<Db> {
+    if (this.db) return Promise.resolve(this.db);
+    return this.load().then(() => {
+      if (!this.db) throw new Error("load db failed");
+      return this.db;
+    });
+  }
+
   constructor(
     private opts: {
       save?: (data: Db) => Promise<void>;
@@ -17,7 +25,7 @@ export class MemoryApiSession implements ApiSession {
   ) {}
 
   public resource(resourceName: string) {
-    return new MemoryResourceApi(this.db || {}, resourceName, {
+    return new MemoryResourceApi(this.loadedDb, resourceName, {
       afterWrite: () => this.save(),
     });
   }
@@ -48,30 +56,32 @@ function isDbItem(item: unknown): item is DbItem {
  * Resource "session" that reads/writes resource data from/to localStorage
  */
 export class MemoryResourceApi implements ApiResourceSession {
-  private get data(): unknown[] {
-    const data = this.db[this.resourceName];
-    if (data) return data as unknown[];
-    const newData: unknown[] = [];
-    this.db[this.resourceName] = newData;
-    return newData;
+  private get data(): Promise<unknown[]> {
+    return this.db.then((db) => {
+      const data = db[this.resourceName];
+      if (data) return data as unknown[];
+      const newData: unknown[] = [];
+      db[this.resourceName] = newData;
+      return newData;
+    });
   }
 
   constructor(
-    private db: Record<string, unknown>,
+    private db: Promise<Db>,
     public readonly resourceName: string,
     private options: { afterWrite?: () => void } = {},
   ) {}
 
   public async index() {
     return {
-      data: cloneDeep(this.data),
+      data: cloneDeep(await this.data),
     };
   }
 
   public async find(pk: PrimaryKey) {
     return {
       data: cloneDeep(
-        this.data.find((item) => isDbItem(item) && item.id === pk),
+        (await this.data).find((item) => isDbItem(item) && item.id === pk),
       ),
     };
   }
@@ -83,7 +93,7 @@ export class MemoryResourceApi implements ApiResourceSession {
     };
 
     log.debug("create", item);
-    this.data.push(item);
+    (await this.data).push(item);
     this.options.afterWrite?.();
 
     return {
@@ -92,7 +102,9 @@ export class MemoryResourceApi implements ApiResourceSession {
   }
 
   public async update(pk: PrimaryKey, args: Record<string, unknown>) {
-    const dbItem = this.data.find((item) => isDbItem(item) && item.id === pk);
+    const dbItem = (await this.data).find(
+      (item) => isDbItem(item) && item.id === pk,
+    );
     if (!dbItem)
       throw new Error(`Record not found: ${pk} (${this.resourceName})`);
     Object.assign(dbItem, args);
@@ -103,13 +115,14 @@ export class MemoryResourceApi implements ApiResourceSession {
   }
 
   public async delete(pk: PrimaryKey) {
-    const item = this.data.find((it) => isDbItem(it) && it.id === pk);
+    const data = await this.data;
+    const item = data.find((it) => isDbItem(it) && it.id === pk);
 
     if (!item)
       throw new Error(`Record not found: ${pk} (${this.resourceName})`);
 
-    const idx = this.data.indexOf(item);
-    this.data.splice(idx, 1);
+    const idx = data.indexOf(item);
+    data.splice(idx, 1);
     this.options.afterWrite?.();
 
     return {

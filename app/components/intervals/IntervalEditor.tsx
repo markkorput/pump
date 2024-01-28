@@ -15,7 +15,7 @@ const defaultValues: IntervalValues = {
 };
 
 export const IntervalEditor = () => {
-  // const { data: intervals } = useIntervals();
+  const { data: intervals } = useIntervals();
   const { mutate: create } = useCreateInterval();
 
   const [interval, setInterval] = useState<
@@ -37,7 +37,7 @@ export const IntervalEditor = () => {
 
   return (
     <Stack>
-      {/* <IntervalSelector intervals={intervals || []} onSelect={setInterval} /> */}
+      <IntervalSelector intervals={intervals || []} onSelect={setInterval} />
       <IntervalInputs values={interval} onChange={setInterval} />
       <TextInput
         label="Interval Name"

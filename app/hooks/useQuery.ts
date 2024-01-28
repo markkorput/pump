@@ -1,4 +1,7 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
+import { createLogger } from "@/lib/logging";
+
+const log = createLogger("useQuery");
 
 export type QueryResult<T> = {
   status: "loading" | "success";
@@ -8,9 +11,14 @@ export type QueryResult<T> = {
 export function useQuery<T>(action: () => Promise<T>): QueryResult<T> {
   const [result, setResult] = useState<T>();
 
+  const ref = useRef<() => Promise<T>>(action);
+
   useEffect(() => {
-    action().then(setResult);
-  }, [action]);
+    ref.current().then((res) => {
+      log.debug("result", res);
+      setResult(res);
+    });
+  }, [ref]);
 
   return useMemo(
     () => ({

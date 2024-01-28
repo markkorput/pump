@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCombobox, Combobox, InputBase } from "@mantine/core";
 import { IntervalDefinition } from "./types";
 
@@ -15,18 +15,26 @@ const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
   const [value, setValue] = useState<string | null>(null);
   const [search, setSearch] = useState<string>("");
 
-  const perfectMatch = !!intervals.find((interval) => interval.name !== search);
-  const filteredOptions = perfectMatch
-    ? intervals
-    : intervals.filter((interval) =>
-        interval.name.toLowerCase().includes(search.toLowerCase().trim()),
-      );
+  const options = useMemo(() => {
+    const perfectMatch = !!intervals.find(
+      (interval) => interval.name === search,
+    );
 
-  const options = filteredOptions.map((interval) => (
-    <Combobox.Option value={interval.id} key={`interval-option-${interval.id}`}>
-      {interval.name}
-    </Combobox.Option>
-  ));
+    const filteredOptions = perfectMatch
+      ? intervals
+      : intervals.filter((interval) =>
+          interval.name.toLowerCase().includes(search.toLowerCase().trim()),
+        );
+
+    return filteredOptions.map((interval) => (
+      <Combobox.Option
+        value={interval.id}
+        key={`interval-option-${interval.id}`}
+      >
+        {interval.name}
+      </Combobox.Option>
+    ));
+  }, [intervals, search]);
 
   useEffect(() => {
     if (value && onSelect) {
@@ -40,7 +48,9 @@ const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
       store={combobox}
       onOptionSubmit={(val) => {
         setValue(val);
-        setSearch(val);
+
+        const selected = intervals.find((interval) => interval.id === val);
+        if (selected) setSearch(selected.name);
         combobox.closeDropdown();
       }}
     >
@@ -48,8 +58,8 @@ const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
         <InputBase
           rightSection={<Combobox.Chevron />}
           rightSectionPointerEvents="none"
-          onClick={() => combobox.toggleDropdown()}
-          onFocus={() => combobox.toggleDropdown()}
+          onClick={() => combobox.openDropdown()}
+          onFocus={() => combobox.openDropdown()}
           onBlur={() => {
             combobox.closeDropdown();
             setSearch(value || "");

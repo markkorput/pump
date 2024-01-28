@@ -1,5 +1,5 @@
 import { ApiSession } from "./session";
-import { createLogger } from "@/lib/logging";
+import { createLogger } from "@lib/logging";
 
 export const log = createLogger("api");
 
