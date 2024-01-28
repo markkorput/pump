@@ -1,6 +1,10 @@
 import { useCallback, useState } from "react";
 import { Stack, TextInput, Button } from "@mantine/core";
-import { useIntervals, useCreateInterval } from "@hooks/intervals";
+import {
+  useIntervals,
+  useCreateInterval,
+  useUpdateInterval,
+} from "@hooks/intervals";
 import { IntervalValues } from "./types";
 import IntervalBar from "./IntervalBar";
 import IntervalInputs from "./IntervalInputs";
@@ -17,23 +21,27 @@ const defaultValues: IntervalValues = {
 export const IntervalEditor = () => {
   const { data: intervals } = useIntervals();
   const { mutate: create } = useCreateInterval();
+  const { mutate: update } = useUpdateInterval();
 
   const [interval, setInterval] = useState<
     IntervalValues & { name?: string; id?: string }
   >(defaultValues);
 
-  // const doSave = (interval: IntervalDefinition & { name: string }) => {};
-
   const save = useCallback(() => {
-    // if (interval) doSave({ ...interval, name });
-    const { name, ...values } = interval;
+    const { name, id, ...values } = interval;
 
     if (name) {
-      create({ name, ...values }).then((res) =>
-        log.debug("Interval saved", res),
-      );
+      if (id) {
+        update({ id, name, ...values }).then((res) =>
+          log.debug("Interval updated", res),
+        );
+      } else {
+        create({ name, ...values }).then((res) =>
+          log.debug("Interval created", res),
+        );
+      }
     }
-  }, [interval, create]);
+  }, [interval, create, update]);
 
   return (
     <Stack>

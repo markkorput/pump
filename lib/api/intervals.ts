@@ -22,6 +22,8 @@ export type IntervalDefinition = {
 };
 
 export type CreateIntervalProps = Omit<IntervalDefinition, "id">;
+export type UpdateIntervalProps = Partial<CreateIntervalProps> &
+  Pick<IntervalDefinition, "id">;
 
 export class IntervalsAPI extends ResourceApi {
   public readonly resourceName = "intervals";
@@ -38,5 +40,14 @@ export class IntervalsAPI extends ResourceApi {
     log.debug("create: ", props);
     const result = await this.resource.create(props);
     return result.data as IntervalDefinition; // TODO
+  }
+
+  public async update({
+    id,
+    ...props
+  }: UpdateIntervalProps): Promise<IntervalDefinition> {
+    log.debug("create: ", props);
+    const result = await this.resource.update(id, props);
+    return result.data as IntervalDefinition;
   }
 }
