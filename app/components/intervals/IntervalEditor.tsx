@@ -1,8 +1,7 @@
 import { useCallback, useState } from "react";
-import { Stack, TextInput, Button } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import {
   useIntervals,
-  useCreateInterval,
   useUpdateInterval,
   useDeleteInterval,
 } from "@hooks/intervals";

@@ -54,6 +54,13 @@ export const IntervalForm = ({
 
   return (
     <Stack>
+      <TextInput
+        label="Interval Name"
+        defaultValue={current.name}
+        onChange={(e) =>
+          setCurrent((cur) => merge(cloneDeep(cur), { name: e.target.value }))
+        }
+      />
       <Group>
         <NumberInput
           min={0}
@@ -97,20 +104,14 @@ export const IntervalForm = ({
         />
       </Group>
 
-      <TextInput
-        label="Interval Name"
-        defaultValue={current.name}
-        onChange={(e) =>
-          setCurrent((cur) => merge(cur, { name: e.target.value }))
-        }
-      />
+      {bar && <IntervalBar interval={current} width={1000} height={20} />}
+
       <Button
         onClick={() => onSubmit?.(current)}
-        disabled={current.name !== ""}
+        disabled={current.name === ""}
       >
         Save Interval
       </Button>
-      {bar && <IntervalBar interval={current} width={1000} height={20} />}
     </Stack>
   );
 };

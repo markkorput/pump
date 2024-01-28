@@ -35,6 +35,12 @@ export class IntervalsAPI extends ResourceApi {
     return result.data as IntervalDefinition[]; // TODO
   }
 
+  public async find(pk: PrimaryKey): Promise<IntervalDefinition> {
+    const result = await this.resource.find(pk);
+    log.warning("TODO: runtime parsing");
+    return result.data as IntervalDefinition; // TODO
+  }
+
   public async create(props: CreateIntervalProps): Promise<IntervalDefinition> {
     log.debug("create: ", props);
     const result = await this.resource.create(props);

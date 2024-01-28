@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   IntervalsAPI,
   CreateIntervalProps,
@@ -6,10 +7,23 @@ import {
 import { useApi } from "./useApi";
 import { useMutation } from "./useMutation";
 import { useQuery } from "./useQuery";
+import { PrimaryKey } from "@/lib/api/session";
 
 export function useIntervals() {
   const intervalsApi = useApi(IntervalsAPI);
-  return useQuery(() => intervalsApi.index());
+  const action = useCallback(() => intervalsApi.index(), [intervalsApi]);
+  return useQuery(action);
+}
+
+export function useInterval(pk: PrimaryKey | undefined) {
+  const intervalsApi = useApi(IntervalsAPI);
+
+  const action = useCallback(
+    async () => (pk ? intervalsApi.find(pk) : undefined),
+    [pk, intervalsApi],
+  );
+
+  return useQuery(action);
 }
 
 export function useCreateInterval() {

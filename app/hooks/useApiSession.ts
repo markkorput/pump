@@ -11,10 +11,20 @@ function createSession() {
   const session = new MemoryApiSession({
     save: async (data) => {
       log.debug("save");
+      if (typeof localStorage === "undefined") {
+        log.warning("localStorage not available");
+        return;
+      }
       localStorage.setItem(localStorageKey, JSON.stringify(data));
     },
     load: async () => {
       log.debug("load");
+
+      if (typeof localStorage === "undefined") {
+        log.warning("localStorage not available");
+        return {};
+      }
+
       return JSON.parse(localStorage.getItem(localStorageKey) || "{}");
     },
   });
