@@ -58,7 +58,7 @@ export const IntervalList = ({
         </Table.Td>
       </Table.Tr>
     ));
-  }, [intervals, onEdit, onDelete, confirmDelete]);
+  }, [intervals, onSelect, onEdit, onDelete, confirmDelete]);
 
   return (
     <Table highlightOnHover>

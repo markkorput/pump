@@ -30,4 +30,38 @@ export function toSections(interval: IntervalValues): IntervalSection[] {
   ]);
 }
 
+export function getSetDuration(interval: IntervalValues): number {
+  return (
+    interval.reps.amount * (interval.reps.duration + interval.reps.rest) -
+    interval.reps.rest
+  );
+}
+
+export function getCurrentSet(interval: IntervalValues, time: number): number {
+  let start = 0.0;
+  const setDuration = getSetDuration(interval);
+
+  for (let idx = 0; idx < interval.sets.amount; idx++) {
+    if (start > time) return idx - 1;
+    if (start + setDuration > time) return idx;
+    start += setDuration + interval.sets.rest;
+  }
+
+  return interval.sets.amount - 1;
+}
+
+export function getCurrentRep(interval: IntervalValues, time: number): number {
+  let start =
+    (getSetDuration(interval) + interval.sets.rest) *
+    getCurrentSet(interval, time);
+
+  for (let idx = 0; idx < interval.reps.amount; idx++) {
+    if (start > time) return idx - 1;
+    if (start + interval.reps.duration > time) return idx;
+    start += interval.reps.duration + interval.reps.rest;
+  }
+
+  return interval.sets.amount - 1;
+}
+
 export default totalDuration;

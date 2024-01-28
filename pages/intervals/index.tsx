@@ -14,12 +14,12 @@ export const Intervals = () => {
           intervals={intervals}
           onSelect={(interval) =>
             Router.push(
-              `./intervals/show?id=${interval.id}&backUrl=${"/interval"}`,
+              `./intervals/show?id=${interval.id}&backUrl=${"/intervals"}`,
             )
           }
           onEdit={(interval) =>
             Router.push(
-              `./intervals/edit?id=${interval.id}&backUrl=${"/interval"}`,
+              `./intervals/edit?id=${interval.id}&backUrl=${"/intervals"}`,
             )
           }
           onDelete={(interval) => deleteInterval(interval.id)}

@@ -19,7 +19,7 @@ export const NewInterval = () => {
   const onSubmit = useCallback(
     async (values: IntervalFormValues) => {
       await create(values);
-      Router.push(params?.backUrl || "/interval");
+      Router.push(params?.backUrl || "/intervals");
     },
     [create, params?.backUrl],
   );

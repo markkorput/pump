@@ -99,7 +99,7 @@ export const IntervalForm = ({
           style={{ width: 100 }}
           placeholder="Rest between sets"
           defaultValue={current.sets.rest || 90.0}
-          onChange={onChanger((v) => ({ reps: { rest: v } }))}
+          onChange={onChanger((v) => ({ sets: { rest: v } }))}
           label="Set Rest"
         />
       </Group>
