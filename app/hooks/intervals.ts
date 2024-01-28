@@ -25,3 +25,8 @@ export function useUpdateInterval() {
     intervalsApi.update(props),
   );
 }
+
+export function useDeleteInterval() {
+  const intervalsApi = useApi(IntervalsAPI);
+  return useMutation((pk: string) => intervalsApi.delete(pk));
+}

@@ -1,4 +1,5 @@
 import { ResourceApi } from "./resource";
+import { PrimaryKey } from "./session";
 import { log as apiLog } from "./api";
 
 const log = apiLog.sub("intervals");
@@ -30,15 +31,14 @@ export class IntervalsAPI extends ResourceApi {
 
   public async index(): Promise<IntervalDefinition[]> {
     const result = await this.resource.index();
-    // parse
+    log.warning("TODO: runtime parsing");
     return result.data as IntervalDefinition[]; // TODO
-    // .col(this.collectionName);
-    // return this.parseCollection(result.data);
   }
 
   public async create(props: CreateIntervalProps): Promise<IntervalDefinition> {
     log.debug("create: ", props);
     const result = await this.resource.create(props);
+    log.warning("TODO: runtime parsing");
     return result.data as IntervalDefinition; // TODO
   }
 
@@ -48,6 +48,14 @@ export class IntervalsAPI extends ResourceApi {
   }: UpdateIntervalProps): Promise<IntervalDefinition> {
     log.debug("create: ", props);
     const result = await this.resource.update(id, props);
+    log.warning("TODO: runtime parsing");
+    return result.data as IntervalDefinition;
+  }
+
+  public async delete(id: PrimaryKey): Promise<IntervalDefinition> {
+    log.debug("delete: ", id);
+    const result = await this.resource.delete(id);
+    log.warning("TODO: runtime parsing");
     return result.data as IntervalDefinition;
   }
 }

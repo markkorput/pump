@@ -41,7 +41,7 @@ export class MemoryApiSession implements ApiSession {
   }
 }
 
-type DbItem = { id: string };
+type DbItem = { id: PrimaryKey };
 
 function isDbItem(item: unknown): item is DbItem {
   return (

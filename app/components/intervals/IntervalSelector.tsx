@@ -1,18 +1,29 @@
-import { useEffect, useMemo, useState } from "react";
-import { useCombobox, Combobox, InputBase } from "@mantine/core";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  CloseButton,
+  useCombobox,
+  Combobox,
+  Group,
+  InputBase,
+} from "@mantine/core";
 import { IntervalDefinition } from "./types";
 
 interface IntervalSelectorProps {
   intervals: IntervalDefinition[];
   onSelect?: (interval: IntervalDefinition) => void;
+  onDelete?: (interval: IntervalDefinition) => void;
 }
 
-const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
+const IntervalSelector = ({
+  intervals,
+  onSelect,
+  onDelete,
+}: IntervalSelectorProps) => {
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
   });
 
-  const [value, setValue] = useState<string | null>(null);
+  const [value, setValue] = useState<IntervalDefinition | null>(null);
   const [search, setSearch] = useState<string>("");
 
   const options = useMemo(() => {
@@ -31,29 +42,47 @@ const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
         value={interval.id}
         key={`interval-option-${interval.id}`}
       >
-        {interval.name}
+        <Group justify="space-between">
+          {interval.name}
+          <CloseButton
+            size="xs"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              if (
+                confirm(
+                  `Are you sure you want to delete the interval "${interval.name}"`,
+                )
+              ) {
+                onDelete?.(interval);
+              }
+            }}
+          />
+        </Group>
       </Combobox.Option>
     ));
-  }, [intervals, search]);
+  }, [intervals, search, onDelete]);
 
   useEffect(() => {
     if (value && onSelect) {
-      const selected = intervals.find((interval) => interval.id === value);
-      if (selected) onSelect(selected);
+      onSelect(value);
     }
-  }, [intervals, value, onSelect]);
+  }, [value, onSelect]);
+
+  const onOptionSubmit = useCallback(
+    (val: string) => {
+      const selected = intervals.find((int) => int.id === val);
+      if (selected) {
+        setValue(selected);
+        setSearch(selected.name);
+      }
+      combobox.closeDropdown();
+    },
+    [intervals, combobox],
+  );
 
   return (
-    <Combobox
-      store={combobox}
-      onOptionSubmit={(val) => {
-        setValue(val);
-
-        const selected = intervals.find((interval) => interval.id === val);
-        if (selected) setSearch(selected.name);
-        combobox.closeDropdown();
-      }}
-    >
+    <Combobox store={combobox} onOptionSubmit={onOptionSubmit}>
       <Combobox.Target>
         <InputBase
           rightSection={<Combobox.Chevron />}
@@ -62,7 +91,7 @@ const IntervalSelector = ({ intervals, onSelect }: IntervalSelectorProps) => {
           onFocus={() => combobox.openDropdown()}
           onBlur={() => {
             combobox.closeDropdown();
-            setSearch(value || "");
+            if (value) setSearch(value.name);
           }}
           placeholder="Search for saved interval"
           value={search}
