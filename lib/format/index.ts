@@ -5,7 +5,5 @@ dayjs.extend(duration);
 
 export function formatTime(ms: number) {
   const dur = dayjs.duration(ms);
-  return (
-    dur.format("mm:ss:") + dur.format("SSS").split(".")[0].padStart(3, "0")
-  );
+  return dur.format("mm:ss:") + dur.format("SSS")[0];
 }
