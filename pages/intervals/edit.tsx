@@ -21,7 +21,7 @@ export const EditInterval = () => {
   const onSubmit = useCallback(
     async (values: IntervalFormValues) => {
       if (!interval) return;
-      console.log({ values });
+
       await update({ ...values, id: interval.id });
       Router.push(params?.backUrl || "/intervals");
     },
